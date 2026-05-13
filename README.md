@@ -38,9 +38,9 @@ A structured **90-day DSA grind plan** built specifically for a **Machine Learni
 ## 📁 Folder Structure
 ```text
 dsa-grind/
-├── phase_a_foundations/
-├── phase_b_core_patterns/
-├── phase_c_graphs_dp/
+├── Phase A/
+├── Phase B/
+├── Phase C/
 │
 ├── .gitignore
 ├── requirements.txt

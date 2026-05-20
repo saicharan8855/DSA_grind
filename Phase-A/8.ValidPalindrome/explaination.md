@@ -1,34 +1,38 @@
-Valid Palindrome – Two Approaches (Clean + Two Pointers)
-What’s the problem asking?
-You’re given a string s.
-You need to check if it is a valid palindrome after:
+# Valid Palindrome – Two Approaches (Clean + Two Pointers)
 
-Converting all uppercase letters to lowercase.
+## What’s the problem asking?
 
-Removing all non-alphanumeric characters (spaces, commas, punctuation, etc.).
+You’re given a string `s`.
+
+You need to check if it is a **valid palindrome** after:
+
+- Converting all uppercase letters to lowercase.
+- Removing all **non-alphanumeric** characters (spaces, commas, punctuation, etc.).
 
 A string is a palindrome if it reads the same forward and backward after this cleaning.
 
 Examples:
 
-"A man, a plan, a canal: Panama" → true (valid palindrome)
+- `"A man, a plan, a canal: Panama"` → `true` (valid palindrome)
+- `"race a car"` → `false`
 
-"race a car" → false
+---
 
-Approach 1 – Brute force with cleaned string
-Intuition
-Build a cleaned version of s:
+# Approach 1 – Brute force with cleaned string
 
-Keep only letters and digits.
+## Intuition
 
-Convert them all to lowercase.
+1. Build a **cleaned** version of `s`:
+   - Keep only letters and digits.
+   - Convert them all to lowercase.
 
-A string is a palindrome if it is equal to its reverse.
+2. A string is a palindrome if it is **equal to its reverse**.
 
-So just compare the cleaned string with its reversed version.
+3. So just compare the cleaned string with its reversed version.
 
-Code
-python
+## Code
+
+```python
 def is_palindrome_brute(s):
     # Step 1: Keep only alphanumeric chars, make lowercase
     cleaned = ""
@@ -38,74 +42,71 @@ def is_palindrome_brute(s):
 
     # Step 2: Reverse and compare
     return cleaned == cleaned[::-1]
-Walking through an example
+```
+
+## Walking through an example
+
 Take:
 
-python
+```python
 s = "A man, a plan, a canal: Panama"
-Step 1 – Clean the string
+```
 
-Iterate over each character:
+## Step 1 – Clean the string
 
-'A' → letter → add 'a'
-
-' ' → space → skip
-
-'m' → add 'm'
-
-'a' → add 'a'
-
-'n' → add 'n'
-
-',' → skip
-
-and so on...
+- Iterate over each character:
+  - `'A'` → letter → add `'a'`
+  - `' '` → space → skip
+  - `'m'` → add `'m'`
+  - `'a'` → add `'a'`
+  - `'n'` → add `'n'`
+  - `','` → skip
+  - and so on...
 
 Result:
 
-python
+```python
 cleaned = "amanaplanacanalpanama"
-Step 2 – Reverse and compare
+```
 
-cleaned[::-1] also equals "amanaplanacanalpanama".
+## Step 2 – Reverse and compare
 
-So cleaned == cleaned[::-1] → True.
+- `cleaned[::-1]` also equals `"amanaplanacanalpanama"`.
+- So `cleaned == cleaned[::-1]` → `True`.
 
-Complexity
-Cleaning string: O(n)
+## Complexity
 
-Reversing string: O(n)
-
-Total time: O(n).
-
-Space: O(n) for the cleaned copy.
+- Cleaning string: O(n)
+- Reversing string: O(n)
+- Total time: **O(n)**
+- Space: **O(n)** for the cleaned copy.
 
 This is simple and clear, but uses extra memory proportional to the input size.
 
-Approach 2 – Optimal Two-Pointer Approach
-Intuition
-Instead of building a new string, use two pointers:
+---
 
-left starts at the beginning.
+# Approach 2 – Optimal Two-Pointer Approach
 
-right starts at the end.
+## Intuition
 
-While left < right:
+Instead of building a new string, use **two pointers**:
 
-Skip non-alphanumeric characters on the left.
+- `left` starts at the beginning.
+- `right` starts at the end.
 
-Skip non-alphanumeric characters on the right.
+While `left < right`:
 
-Compare lowercase characters at left and right:
+1. Skip non-alphanumeric characters on the left.
+2. Skip non-alphanumeric characters on the right.
+3. Compare lowercase characters at `left` and `right`:
+   - If they mismatch → **not** a palindrome → return `False`.
+   - If they match → move both pointers inward and continue.
 
-If they mismatch → not a palindrome → return False.
+If the loop finishes without mismatches → it **is** a palindrome → return `True`.
 
-If they match → move both pointers inward and continue.
+## Code
 
-If the loop finishes without mismatches → it is a palindrome → return True.
-
-Code
-python
+```python
 def is_palindrome(s):
     left = 0
     right = len(s) - 1
@@ -114,91 +115,117 @@ def is_palindrome(s):
         # Skip non-alphanumeric from the left
         if not s[left].isalnum():
             left += 1
+
         # Skip non-alphanumeric from the right
         elif not s[right].isalnum():
             right -= 1
+
         else:
             # Both pointers on valid chars — compare them
             if s[left].lower() != s[right].lower():
                 return False       # mismatch found
+
             left += 1
             right -= 1
 
     return True                    # all characters matched
-Step-by-step walkthrough (two pointers)
+```
+
+---
+
+# Step-by-step walkthrough (two pointers)
+
 Use the classic example:
 
-python
+```python
 s = "A man, a plan, a canal: Panama"
-Initial pointers
-python
+```
+
+## Initial pointers
+
+```python
 left = 0                  # 'A'
 right = len(s) - 1        # 'a'
-s[left] = 'A' (alphanumeric)
+```
 
-s[right] = 'a' (alphanumeric)
+- `s[left] = 'A'` (alphanumeric)
+- `s[right] = 'a'` (alphanumeric)
 
 Compare:
 
-'a' vs 'a' (after lowercase) → match
+- `'a'` vs `'a'` (after lowercase) → match
 
 Move pointers:
 
-python
-left = 1       # now at ' '
+```python
+left = 1
 right = right - 1
-Skipping non-alphanumeric characters
-Now at left = 1, s[left] = ' ' (space):
+```
 
-not s[left].isalnum() is True → just move left:
+## Skipping non-alphanumeric characters
 
-left = 2 (now 'm')
+Now at `left = 1`, `s[left] = ' '` (space):
 
-On the right side, if we hit ' ', ':', ',' etc., we similarly move right leftwards until it reaches an alphanumeric.
+- `not s[left].isalnum()` is `True`
+- Move `left` forward:
+  - `left = 2` (now `'m'`)
 
-Continuing the comparisons
+On the right side, if we hit `' '`, `':'`, `','` etc., we similarly move `right` leftwards until it reaches an alphanumeric.
+
+## Continuing the comparisons
+
 The algorithm will compare pairs like:
 
-'m' vs 'm'
+- `'m'` vs `'m'`
+- `'a'` vs `'a'`
+- `'n'` vs `'n'`
 
-'a' vs 'a'
+All after converting to lowercase.
 
-'n' vs 'n'
+If at any point:
 
-...
+```python
+s[left].lower() != s[right].lower()
+```
 
-All after lowercasing.
-If at any point s[left].lower() != s[right].lower(), we immediately return False.
+we immediately return `False`.
 
-When left meets or passes right, all valid characters matched → return True.
+When `left` meets or passes `right`, all valid characters matched → return `True`.
 
-Why the two-pointer approach is efficient
-We scan each character at most once from either side.
+---
 
-Skipping non-alphanumerics is still O(n) total, because each pointer only moves forward or backward, never backtracks.
+# Why the two-pointer approach is efficient
+
+- We scan each character at most once from either side.
+- Skipping non-alphanumerics is still O(n) total because each pointer only moves inward and never backtracks.
 
 So:
 
-Time: O(n).
-
-Extra space: O(1) (just indices and a few temporary values).
+- Time: **O(n)**
+- Extra space: **O(1)**
 
 This improves on the brute-force approach by avoiding an entire cleaned copy of the string.
 
-Summary – When to use which
-Brute force (clean + reverse):
+---
 
-Easiest to remember, very readable.
+# Summary – When to use which
 
-Time: O(n), Space: O(n).
+## Brute force (clean + reverse)
 
-Two pointers (optimal):
+- Easiest to remember
+- Very readable
+- Time: O(n)
+- Space: O(n)
 
-Same time: O(n), but:
+## Two pointers (optimal)
 
-Space: O(1), more memory-efficient.
+- Same time complexity: O(n)
+- Better space complexity: O(1)
+- More memory-efficient
+- Uses direct pointer logic with `isalnum()` and `lower()` on the fly
 
-Uses direct pointer logic with isalnum() and lower() on the fly.
+---
 
-One-line takeaway
+# One-line takeaway
+
 You can either clean the string and compare it to its reverse, or more optimally, use two pointers that skip non-alphanumeric characters and compare matching characters in-place to check if the string is a valid palindrome.
